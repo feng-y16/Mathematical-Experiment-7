@@ -1,0 +1,46 @@
+%%
+clear
+tic
+n=100000;
+radius=100;  
+sx=80;
+sy=60;
+r=0.4;
+x=unifrnd(-radius,radius,1,n);  
+y=unifrnd(-radius,radius,1,n);
+z1=exp(-0.5*(x.^2/sx^2+y.^2/sy^2-2*r*x.*y/sx/sy)/(1-r^2));  
+u=x.^2+y.^2<radius^2;
+P1=4*radius^2*sum(z1.*u)/2/pi/sx/sy/sqrt(1-r^2)/n;
+t1=toc;
+for i=1:1:9
+    x=unifrnd(-radius,radius,1,n);  
+    y=unifrnd(-radius,radius,1,n);
+    z1=exp(-0.5*(x.^2/sx^2+y.^2/sy^2-2*r*x.*y/sx/sy)/(1-r^2));  
+    u=x.^2+y.^2<radius^2;
+    P1=[P1 4*radius^2*sum(z1.*u)/2/pi/sx/sy/sqrt(1-r^2)/n];
+end
+f=@(xx,yy)exp(-0.5*(xx.^2/sx^2+yy.^2/sy^2-2*r*xx.*yy/sx/sy)/(1-r^2))/2/pi/sx/sy/sqrt(1-r^2).*(yy>-sqrt(10000-xx.^2)).*(yy<sqrt(10000-xx.^2));
+P_accurate=dblquad(f,-100,100,-100,100,1e-10);
+error1=sum(abs(P1-P_accurate))/10;
+tic
+f=@(xx,yy)exp(-0.5*(xx.^2/sx^2+yy.^2/sy^2-2*r*xx.*yy/sx/sy)/(1-r^2))/2/pi/sx/sy/sqrt(1-r^2).*(yy>-sqrt(10000-xx.^2)).*(yy<sqrt(10000-xx.^2));
+P2=dblquad(f,-100,100,-100,100,1e-5);
+t2=toc;
+error2=abs(P2-P_accurate);
+%%
+clear
+n=100000;
+x_low=-1;
+x_high=1;
+y_low=-1;
+y_high=1;
+z_low=0;
+z_high=2;
+x=unifrnd(x_low,x_high,1,n);  
+y=unifrnd(y_low,y_high,1,n);
+z=unifrnd(z_low,z_high,1,n);
+f=1;
+u=(x.^2+y.^2<1)&(z>sqrt(x.^2+y.^2))&(z<1+sqrt(1-x.^2-y.^2));
+V=(x_high-x_low)*(y_high-y_low)*(z_high-z_low)*sum(f.*u)/n;
+nlist=[10000,100000,1000000,10000000,100000000];
+[volume,time]=volume_compare(nlist);
