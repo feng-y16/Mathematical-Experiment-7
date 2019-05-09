@@ -15,8 +15,15 @@ end
 scatter(data(data_num)-offset,1,20,'MarkerEdgeColor',[0 114 189]/255.0,'LineWidth',1.5)
 line([data(data_num),data(data_num)+1.3*(data(data_num)-data(1))/k],[1,1],'LineWidth',5);
 if nargin>3
-    plot(x,y,'r--','LineWidth',3);
-    title('经验分布函数 & 分布函数')
+    s=size(y);
+    if s(1)==1
+        plot(x,y,'r--','LineWidth',3);
+        title('经验分布函数 & 分布函数')
+    else
+        plot(x,y(2,:),'g--','LineWidth',3);
+        plot(x,y(1,:),'r--','LineWidth',3);
+        title('经验分布函数 & 近似分布函数 & 分布函数')
+    end
 else
     title('经验分布函数')
 end

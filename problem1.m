@@ -13,7 +13,11 @@ for i=1:1:200
     x(i+1)=i;
     y(i+1)=y(i)+nchoosek(200,i)*2^(-200);
 end
-emp_plot(result_positive,11,0.35,x,y)
+y_norm=zeros(1,201);
+for i=1:1:201
+    y_norm(i)=normcdf(x(i),200*0.5,sqrt(200*0.5^2));
+end
+emp_plot(result_positive,11,0.35,x,[y;y_norm])
 %%
 clear
 times=200;
@@ -29,7 +33,10 @@ for i=1:1:200
     x(i+1)=i;
     y(i+1)=y(i)+nchoosek(200,i)*2^(-200);
 end
-emp_plot(result_positive,12,0.35,x,y)
+for i=1:1:201
+    y_norm(i)=normcdf(x(i),200*0.5,sqrt(200*0.5^2));
+end
+emp_plot(result_positive,12,0.35,x,[y;y_norm])
 %%
 clear
 times=20;
